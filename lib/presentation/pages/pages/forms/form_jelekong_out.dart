@@ -65,7 +65,7 @@ class _FormJelekongOutState extends State<FormJelekongOut> {
               ),
             ),
             SizedBox(
-              height: 500,
+              height: 450,
               child: ListView.builder(
                 itemBuilder: ((context, index) => Card(
                       child: ListTile(

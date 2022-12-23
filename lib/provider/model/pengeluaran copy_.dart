@@ -1,4 +1,9 @@
 import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+
+var _uuid = const Uuid();
+
 
 class PengeluaranFields {
   static const String id = 'id';
@@ -15,7 +20,7 @@ class PengeluaranFields {
 }
 
 class Pengeluaran {
-  final int? id;
+  final String? id;
   final int? nomor;
   final String tanggal;
   final String? banyaknya;
@@ -35,7 +40,7 @@ class Pengeluaran {
   });
 
   Pengeluaran copyWith({
-    int? id,
+    String? id,
     int? nomor,
     String? tanggal,
     String? banyaknya,
@@ -45,7 +50,8 @@ class Pengeluaran {
     String? jumlah,
   }) {
     return Pengeluaran(
-      id: id ?? this.id,
+            id: id ?? _uuid.v4(),
+
       nomor: nomor ?? this.nomor,
       tanggal: tanggal ?? this.tanggal,
       banyaknya: banyaknya ?? this.banyaknya,
@@ -119,3 +125,58 @@ class Pengeluaran {
         jumlah.hashCode;
   }
 }
+
+///
+///
+///
+///
+///
+///
+///
+
+class PengeluaranList extends StateNotifier<List<Pengeluaran>> {
+  PengeluaranList([List<Pengeluaran>? state]) : super(state ?? []);
+
+  void addPengeluaran(
+    String? id,
+    int? nomor,
+    String? tanggal,
+    String? banyaknya,
+    String? keterangan,
+    String? satuan,
+    String? nilai,
+    String? jumlah,
+  ) {
+    state = [
+      ...state,
+      Pengeluaran(
+        id: id!,
+        nomor: nomor!,
+        tanggal: tanggal!,
+        banyaknya: banyaknya!,
+        keterangan: keterangan!,
+        satuan: satuan!,
+        nilai: nilai!,
+        jumlah: jumlah!,
+      )
+    ];
+  }
+}
+
+final pengeluaranProvider = StateNotifierProvider((ref) => PengeluaranList());
+
+final pengeluaranListProvider =
+    StateNotifierProvider<PengeluaranList, List<Pengeluaran>>((ref) {
+  return PengeluaranList([
+    Pengeluaran(
+      id: _uuid.v4(),
+      nomor: 01,
+      tanggal: '24 Desember 2022',
+      banyaknya: '0',
+      keterangan: 'pasir',
+      satuan: 'truk',
+      nilai: '0',
+      jumlah: '0',
+    )
+  ]);
+});

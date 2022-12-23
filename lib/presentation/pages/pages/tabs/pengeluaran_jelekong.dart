@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../forms/form_jelekong_out.dart';
+import '../forms/form_jelekong_out copy_.dart';
+// import '../forms/form_jelekong_out.dart';
 import '../forms/form_pengeluaran.dart';
 
 class PengeluaranJelekong extends StatelessWidget {
@@ -9,14 +10,14 @@ class PengeluaranJelekong extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Center(
           child: ElevatedButton(
               onPressed: () {
                 showDialog(
                     context: context,
-                    builder: (context) => FormJelekongOut(
-                          addCatatanPengeluaran: (p0) {},
-                        ));
+                    // builder: (context) => FormJelekongOut(
+                    builder: (context) => const CopyFormJelekongOut());
               },
               child: const Text('Tambah Catatan'))),
       floatingActionButton: FloatingActionButton(
