@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
@@ -22,7 +21,7 @@ class PengeluaranFields {
 class Pengeluaran {
   final String? id;
   final int? nomor;
-  final String tanggal;
+  final String? tanggal;
   final String? banyaknya;
   final String? keterangan;
   final String? satuan;
@@ -31,7 +30,7 @@ class Pengeluaran {
   Pengeluaran({
     this.id,
     this.nomor,
-    required this.tanggal,
+    this.tanggal,
     this.banyaknya,
     this.keterangan,
     this.satuan,
@@ -162,17 +161,7 @@ class PengeluaranList extends StateNotifier<List<Pengeluaran>> {
   }
 }
 
-// TODO == >> F E T C H   D A T A   F U N C T I O N
-// TODO == >> F E T C H   D A T A   F U N C T I O N
-// TODO == >> F E T C H   D A T A   F U N C T I O N
-
-// final loadPengeluaran = FutureProvider<Pengeluaran>((ref) async {
-//   Pengeluaran expenses;
-//   final List<Pengeluaran> pengeluaran = [];
-
-//   pengeluaran.map((e) => null);
-//   return expenses;
-// });
+// final pengeluaran = Provider<List<Pengeluaran>>((ref) => [Pengeluaran()]);
 
 final pengeluaranProvider = StateNotifierProvider((ref) => PengeluaranList());
 
@@ -191,3 +180,60 @@ final pengeluaranListProvider =
     )
   ]);
 });
+
+class PengeluaranNotifier extends StateNotifier<Map<dynamic, Pengeluaran>> {
+  PengeluaranNotifier() : super({});
+
+  int pengeluaranLength() {
+    return state.length;
+  }
+
+  void add(
+    String? id,
+    int? nomor,
+    String? tanggal,
+    String? banyaknya,
+    String? keterangan,
+    String? satuan,
+    String? nilai,
+    String? jumlah,
+  ) {
+    // if (!state.containsKey(_uuid)) {
+    Map<dynamic, Pengeluaran> exMap = {
+      id: Pengeluaran(
+        id: id!,
+        nomor: nomor!,
+        tanggal: tanggal!,
+        banyaknya: banyaknya!,
+        keterangan: keterangan!,
+        satuan: satuan!,
+        nilai: nilai!,
+        jumlah: jumlah!,
+      )
+    };
+    state = {...state, ...exMap};
+    // } else {
+    //   state.update(
+    //     _uuid,
+    //     (existing) => Pengeluaran(
+    //       id: existing.id!,
+    //       nomor: existing.nomor!,
+    //       tanggal: existing.tanggal!,
+    //       banyaknya: existing.banyaknya!,
+    //       keterangan: existing.keterangan!,
+    //       satuan: existing.satuan!,
+    //       nilai: existing.nilai!,
+    //       jumlah: existing.jumlah!,
+    //     ),
+    //   );
+    // }
+  }
+}
+
+final exMapProvider =
+    StateNotifierProvider<PengeluaranNotifier, Map<dynamic, Pengeluaran>>(
+        (ref) => PengeluaranNotifier());
+
+final idProvider = Provider((ref) => Pengeluaran().id);
+
+final exNot = Provider((ref) => PengeluaranNotifier());
