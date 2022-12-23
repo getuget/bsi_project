@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {},
-                  child: const Text('Laporan 2'),
+                  child: const Text('cart example'),
                 ),
               ],
             ),
