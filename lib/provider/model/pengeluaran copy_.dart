@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 var _uuid = const Uuid();
-
 
 class PengeluaranFields {
   static const String id = 'id';
@@ -50,8 +50,7 @@ class Pengeluaran {
     String? jumlah,
   }) {
     return Pengeluaran(
-            id: id ?? _uuid.v4(),
-
+      id: id ?? _uuid.v4(),
       nomor: nomor ?? this.nomor,
       tanggal: tanggal ?? this.tanggal,
       banyaknya: banyaknya ?? this.banyaknya,
@@ -162,6 +161,18 @@ class PengeluaranList extends StateNotifier<List<Pengeluaran>> {
     ];
   }
 }
+
+// TODO == >> F E T C H   D A T A   F U N C T I O N
+// TODO == >> F E T C H   D A T A   F U N C T I O N
+// TODO == >> F E T C H   D A T A   F U N C T I O N
+
+// final loadPengeluaran = FutureProvider<Pengeluaran>((ref) async {
+//   Pengeluaran expenses;
+//   final List<Pengeluaran> pengeluaran = [];
+
+//   pengeluaran.map((e) => null);
+//   return expenses;
+// });
 
 final pengeluaranProvider = StateNotifierProvider((ref) => PengeluaranList());
 
