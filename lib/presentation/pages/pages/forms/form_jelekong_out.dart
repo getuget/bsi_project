@@ -103,14 +103,14 @@ class _FormJelekongOutState extends State<FormJelekongOut> {
                     style: ElevatedButton.styleFrom(
                         fixedSize: const Size.fromWidth(280)),
                     onPressed: () {
-                      final pengeluaran = Pengeluaran(
-                          id: 1,
-                          nomor: 31,
-                          tanggal: '25 agustus 2022',
-                          banyaknya: qtyController?.text,
-                          keterangan: keteranganController?.text,
-                          nilai: nilaiController?.text,
-                          jumlah: '650000');
+                      // final pengeluaran = Pengeluaran(
+                      //     id: 1,
+                      //     nomor: 31,
+                      //     tanggal: '25 agustus 2022',
+                      //     banyaknya: qtyController?.text,
+                      //     keterangan: keteranganController?.text,
+                      //     nilai: nilaiController?.text,
+                      //     jumlah: '650000');
 
                       // widget.addCatatanPengeluaran;
                     },

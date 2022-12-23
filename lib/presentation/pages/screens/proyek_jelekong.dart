@@ -15,6 +15,7 @@ class _ProyekJelekongState extends State<ProyekJelekong> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: const Text('Proyek Jelekong'),
           centerTitle: true,
