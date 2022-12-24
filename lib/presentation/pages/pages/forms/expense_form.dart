@@ -14,14 +14,15 @@ class CopyFormJelekongOut extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scrollController = useScrollController();
+    // final scrollController = useScrollController();
 
     final dateController = useTextEditingController();
+    final nomorNotaController = useTextEditingController();
     final keteranganController = useTextEditingController();
-    final nilaiController = useTextEditingController();
     final qtyController = useTextEditingController();
     final satuanController = useTextEditingController();
-    final nomorNotaController = useTextEditingController();
+    final nilaiController = useTextEditingController();
+    final jumlahController = useTextEditingController();
 
     final noNotaFocusNode = useFocusNode();
     final keteranganFocusNode = useFocusNode();
@@ -33,15 +34,26 @@ class CopyFormJelekongOut extends HookConsumerWidget {
     final initialValue = DateTime.now();
     final format = DateFormat("dd MMM, yyyy  HH:mm");
 
-    final idProvider = Provider<String>((ref) => Pengeluaran().id!);
-    const uuid = Uuid();
+    // final idProvider = Provider<String>((ref) => Pengeluaran().id!);
+    // const uuid = Uuid();
+    var _uuid = const Uuid();
+
+    TextStyle formTextStyle() {
+      return const TextStyle(
+        overflow: TextOverflow.fade,
+        fontSize: 13,
+      );
+    }
 
     InputDecoration input(String labelName) {
       return InputDecoration(
-          labelText: labelName,
-          labelStyle: const TextStyle(fontSize: 13),
-          border: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black45)));
+        labelText: labelName,
+        labelStyle: const TextStyle(fontSize: 13),
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black45),
+        ),
+        contentPadding: const EdgeInsets.fromLTRB(4, 0, 8, 0),
+      );
     }
 
     BoxDecoration boxDecoration() {
@@ -51,16 +63,38 @@ class CopyFormJelekongOut extends HookConsumerWidget {
       );
     }
 
+    ConstrainedBox constrained(Widget child) {
+      return ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 100,
+          // maxHeight: 80,
+        ),
+        child: child,
+      );
+    }
+
+    TextStyle labelStyle() {
+      return TextStyle(
+        color: Colors.grey[800],
+        // letterSpacing: 0.5,
+      );
+    }
+
     final postPengeluaran = ref.watch(pengeluaranListProvider);
-    final Object? list = ref.watch(pengeluaranProvider);
-    final mmap = ref.watch(exMapProvider);
+    // final Object? list = ref.watch(pengeluaranProvider);
+    // final mmap = ref.watch(exMapProvider);
+
+    int? noNota;
+    int? jumlah;
 
     return Dialog(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Column(
+          child: ListView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             children: [
               const SizedBox(height: 15),
               Container(
@@ -82,6 +116,7 @@ class CopyFormJelekongOut extends HookConsumerWidget {
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
                               fontSize: 16,
+                              letterSpacing: 1.0,
                             ),
                           ),
                           Row(
@@ -130,6 +165,7 @@ class CopyFormJelekongOut extends HookConsumerWidget {
                                   controller: nomorNotaController,
                                   focusNode: noNotaFocusNode,
                                   keyboardType: TextInputType.number,
+                                  style: formTextStyle(),
                                   decoration: InputDecoration(
                                     labelText: 'Nomor Nota',
                                     labelStyle: TextStyle(
@@ -147,6 +183,10 @@ class CopyFormJelekongOut extends HookConsumerWidget {
                                   onSubmitted: (value) {
                                     // Focus.of(context)
                                     keteranganFocusNode.requestFocus();
+                                  },
+                                  onChanged: (val) {
+                                    noNota = int.tryParse(val);
+                                    debugPrint('$noNota');
                                   },
                                 ),
                               ),
@@ -166,35 +206,37 @@ class CopyFormJelekongOut extends HookConsumerWidget {
                   ),
                 ),
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(
                     maxHeight: 450,
                     minHeight: 70,
                   ),
-                  child: RawScrollbar(
-                    controller: scrollController,
-                    child: DataTable(
-                      columns: const [
-                        DataColumn(label: Text('Keterangan')),
-                        DataColumn(label: Text('Qty')),
-                        DataColumn(label: Text('Satuan')),
-                        DataColumn(label: Text('Harga')),
-                        DataColumn(label: Text('Jumlah')),
-                      ],
-                      rows: postPengeluaran
-                          .map((e) => DataRow(
-                                cells: [
-                                  DataCell(Text(e.keterangan!)),
-                                  DataCell(Text(e.banyaknya!)),
-                                  DataCell(Text(e.satuan!)),
-                                  DataCell(Text(e.nilai!)),
-                                  DataCell(Text(e.jumlah!)),
-                                ],
-                              ))
-                          .toList(),
-                    ),
+                  child: DataTable(
+                    columnSpacing: 10,
+                    dataRowHeight: 30,
+                    headingRowHeight: 40,
+                    showBottomBorder: true,
+                    columns: [
+                      DataColumn(
+                          label: Text('Keterangan', style: labelStyle())),
+                      DataColumn(label: Text('Qty', style: labelStyle())),
+                      DataColumn(label: Text('Satuan', style: labelStyle())),
+                      DataColumn(label: Text('Nilai', style: labelStyle())),
+                      DataColumn(label: Text('Jumlah', style: labelStyle())),
+                    ],
+                    rows: postPengeluaran
+                        .map((e) => DataRow(
+                              cells: [
+                                DataCell(constrained(Text(e.keterangan!))),
+                                DataCell(constrained(Text(e.banyaknya!))),
+                                DataCell(constrained(Text(e.satuan!))),
+                                DataCell(constrained(Text(e.nilai!))),
+                                DataCell(constrained(Text(e.jumlah!))),
+                              ],
+                            ))
+                        .toList(),
                   ),
                 ),
               ),
@@ -212,14 +254,16 @@ class CopyFormJelekongOut extends HookConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
-                            width: 90,
+                            width: 80,
                             height: 35,
                             decoration: boxDecoration(),
                             child: TextFormField(
+                              maxLines: 1,
                               controller: keteranganController,
                               focusNode: keteranganFocusNode,
                               textInputAction: TextInputAction.next,
                               decoration: input('Keterangan'),
+                              style: formTextStyle(),
                               onFieldSubmitted: (value) {
                                 qtyFocusNode.requestFocus();
                               },
@@ -235,13 +279,23 @@ class CopyFormJelekongOut extends HookConsumerWidget {
                               textInputAction: TextInputAction.next,
                               keyboardType: TextInputType.number,
                               decoration: input("Qty"),
+                              style: formTextStyle(),
                               onFieldSubmitted: (value) {
                                 satuanFocusNode.requestFocus();
+                              },
+                              onChanged: (val) {
+                                if (nilaiController.text.trim().isNotEmpty) {
+                                  var x = int.tryParse(qtyController.text);
+                                  var y = int.tryParse(nilaiController.text);
+                                  jumlah = x! * y!;
+                                  jumlahController.text = jumlah.toString();
+                                }
+                                debugPrint('Jumlah: $jumlah');
                               },
                             ),
                           ),
                           Container(
-                            width: 65,
+                            width: 55,
                             height: 35,
                             decoration: boxDecoration(),
                             child: TextFormField(
@@ -249,13 +303,14 @@ class CopyFormJelekongOut extends HookConsumerWidget {
                               focusNode: satuanFocusNode,
                               textInputAction: TextInputAction.next,
                               decoration: input('Satuan'),
+                              style: formTextStyle(),
                               onFieldSubmitted: (value) {
                                 jumlahFocusNode.requestFocus();
                               },
                             ),
                           ),
                           Container(
-                            width: 70,
+                            width: 60,
                             height: 35,
                             decoration: boxDecoration(),
                             child: TextFormField(
@@ -263,12 +318,35 @@ class CopyFormJelekongOut extends HookConsumerWidget {
                               focusNode: jumlahFocusNode,
                               keyboardType: TextInputType.number,
                               textInputAction: TextInputAction.next,
-                              decoration: input('Jumlah'),
+                              decoration: input('Nilai'),
+                              style: formTextStyle(),
                               onFieldSubmitted: (value) {
-                                // Focus.of(context)
-                                //     .requestFocus(tombolCatatFocusNode);
                                 tombolCatatFocusNode.requestFocus();
                               },
+                              onChanged: (val) {
+                                if (qtyController.text.trim().isNotEmpty) {
+                                  var x = int.tryParse(qtyController.text);
+                                  var y = int.tryParse(nilaiController.text);
+                                  jumlah = x! * y!;
+                                  jumlahController.text = jumlah.toString();
+                                }
+                                debugPrint('Jumlah: $jumlah');
+                              },
+                            ),
+                          ),
+                          Container(
+                            width: 75,
+                            height: 35,
+                            decoration: boxDecoration(),
+                            child: TextFormField(
+                              readOnly: true,
+                              controller: jumlahController,
+                              focusNode: jumlahFocusNode,
+                              keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.next,
+                              decoration: input('Jumlah'),
+                              style: formTextStyle(),
+                              onChanged: (val) {},
                             ),
                           ),
                         ],
@@ -278,22 +356,19 @@ class CopyFormJelekongOut extends HookConsumerWidget {
                     ElevatedButton(
                       focusNode: tombolCatatFocusNode,
                       style: ElevatedButton.styleFrom(
-                          // backgroundColor: tombolCatatFocusNode.hasFocus
-                          //     ? Colors.deepOrange
-                          //     : null,
                           fixedSize: const Size.fromWidth(300)),
                       onPressed: () {
                         ref
                             .read(pengeluaranListProvider.notifier)
                             .addPengeluaran(
-                              '$uuid',
-                              int.parse(nomorNotaController.text),
+                              _uuid.v4(),
+                              noNota!,
                               dateController.text,
                               qtyController.text,
                               keteranganController.text,
-                              'buah',
+                              satuanController.text,
                               nilaiController.text,
-                              null,
+                              jumlahController.text,
                             );
                         debugPrint('$pengeluaranListProvider');
                       },
